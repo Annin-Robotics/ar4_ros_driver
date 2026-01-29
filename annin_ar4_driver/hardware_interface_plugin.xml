@@ -1,4 +1,4 @@
-<library path="annin_ar4_driver">
+<library path="annin_ar4_driver_hw">
   <class name="annin_ar4_driver/ARHardwareInterface"
          type="annin_ar4_driver::ARHardwareInterface"
          base_class_type="hardware_interface::SystemInterface">
