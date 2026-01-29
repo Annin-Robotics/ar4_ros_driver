@@ -1,0 +1,5 @@
+string mask
+---
+bool success
+string message
+

@@ -28,6 +28,9 @@ hardware_interface::CallbackReturn ARHardwareInterface::on_init(
   if (!success) {
     return hardware_interface::CallbackReturn::ERROR;
   }
+     
+
+  
 
   // calibrate joints if needed
   bool calibrate = info_.hardware_parameters.at("calibrate") == "True";
@@ -45,8 +48,95 @@ hardware_interface::CallbackReturn ARHardwareInterface::on_init(
       RCLCPP_INFO(logger_, "calibration failed.");
       return hardware_interface::CallbackReturn::ERROR;
     }
+    RCLCPP_INFO(logger_, "calibration succeeded.");
   }
-  RCLCPP_INFO(logger_, "calibration succeeded.");
+  
+  
+  // Create a small internal node to host services (shares the same process as        controller_manager)
+
+  service_node_ = std::make_shared<rclcpp::Node>("ar4_hw_services_" + ar_model);
+
+
+// Service: calibrate joints by mask (e.g. "000011")
+calib_mask_srv_ =
+    service_node_->create_service<annin_ar4_driver::srv::CalibrateMask>(
+        "calibrate_mask",
+        [this](
+            const std::shared_ptr<annin_ar4_driver::srv::CalibrateMask::Request>
+                req,
+            std::shared_ptr<annin_ar4_driver::srv::CalibrateMask::Response>
+                res) {
+          // Enable special mode so ros2_control write() stops streaming MT/MV
+          special_mode_.store(true);
+          const auto clear_special =
+              std::unique_ptr<void, std::function<void(void*)>>(
+                  (void*)1, [this](void*) { special_mode_.store(false); });
+
+          // Basic validation
+          if (req->mask.size() != 6) {
+            res->success = false;
+            res->message = "Mask must be exactly 6 chars (J1..J6), e.g. 000011";
+            return;
+          }
+          for (char c : req->mask) {
+            if (c != '0' && c != '1') {
+              res->success = false;
+              res->message = "Mask must contain only '0' or '1'.";
+              return;
+            }
+          }
+
+          // Refuse if estopped
+          if (driver_.isEStopped()) {
+            res->success = false;
+            res->message =
+                "Robot is E-stopped. Reset E-stop before calibrating.";
+            return;
+          }
+
+          // Run calibration by mask (blocks until JC ack OR timeout/ER)
+          const bool ok = driver_.calibrateMask(req->mask);
+          res->success = ok;
+          res->message = ok ? "Calibration (mask) completed/acknowledged."
+                            : "Calibration failed (timeout/ER/no ack).";
+        });
+
+// Service: park
+park_srv_ = service_node_->create_service<std_srvs::srv::Trigger>(
+    "park",
+    [this](const std::shared_ptr<std_srvs::srv::Trigger::Request> /*req*/,
+           std::shared_ptr<std_srvs::srv::Trigger::Response> res) {
+      // Enable special mode so ros2_control write() stops streaming MT/MV
+      special_mode_.store(true);
+      const auto clear_special =
+          std::unique_ptr<void, std::function<void(void*)>>(
+              (void*)1, [this](void*) { special_mode_.store(false); });
+
+      // Refuse if estopped
+      if (driver_.isEStopped()) {
+        res->success = false;
+        res->message = "Robot is E-stopped. Reset E-stop before parking.";
+        return;
+      }
+
+      // Run park (blocks until PK ack OR timeout/ER)
+      const bool ok = driver_.park();
+      res->success = ok;
+      res->message =
+          ok ? "Park completed/acknowledged." : "Park failed (timeout/ER/no ack).";
+    });
+  
+
+
+
+// Spin services in a dedicated thread (so ros2_control update loop isn't blocked)
+  service_exec_ = std::make_shared<rclcpp::executors::SingleThreadedExecutor>();
+  service_exec_->add_node(service_node_);
+
+  service_thread_ = std::thread([this]() {
+    service_exec_->spin();
+  });
+
 
   return hardware_interface::CallbackReturn::SUCCESS;
 }
@@ -129,16 +219,47 @@ hardware_interface::return_type ARHardwareInterface::read(
   return hardware_interface::return_type::OK;
 }
 
+ARHardwareInterface::~ARHardwareInterface() {
+  if (service_exec_) {
+    service_exec_->cancel();
+  }
+  if (service_thread_.joinable()) {
+    service_thread_.join();
+  }
+}
+
 hardware_interface::return_type ARHardwareInterface::write(
     const rclcpp::Time& /*time*/, const rclcpp::Duration& /*period*/) {
+
+  // If a special command (park/calibration) is running, do NOT stream MT/MV.
+  // Streaming will override PK/JM and prevent motion.
+  if (special_mode_.load()) {
+    // Optionally still check estop status by polling state, but do NOT send commands.
+    // driver_.getJointPositions(actuator_positions_);
+    // driver_.getJointVelocities(actuator_velocities_);
+
+    if (driver_.isEStopped()) {
+      std::string logWarn =
+          "Hardware in EStop state. To reset the EStop "
+          "reactivate the hardware component using 'ros2 "
+          "run annin_ar4_driver reset_estop.sh <ar_model>'.";
+      RCLCPP_WARN(logger_, logWarn.c_str());
+      return hardware_interface::return_type::ERROR;
+    }
+
+    return hardware_interface::return_type::OK;
+  }
+
   for (size_t i = 0; i < info_.joints.size(); ++i) {
     // convert from rad to deg, apply offsets
     actuator_pos_commands_[i] =
         radToDeg(joint_position_commands_[i]) - joint_offsets_[i];
     actuator_vel_commands_[i] = radToDeg(joint_velocity_commands_[i]);
   }
+
   driver_.update(actuator_pos_commands_, actuator_vel_commands_,
                  actuator_positions_, actuator_velocities_);
+
   if (driver_.isEStopped()) {
     std::string logWarn =
         "Hardware in EStop state. To reset the EStop "
@@ -150,6 +271,7 @@ hardware_interface::return_type ARHardwareInterface::write(
   }
   return hardware_interface::return_type::OK;
 }
+
 
 }  // namespace annin_ar4_driver
 

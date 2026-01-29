@@ -3,6 +3,8 @@
 #include <chrono>
 #include <stdexcept>
 #include <thread>
+#include <mutex>
+
 
 #define FW_VERSION "2.1.0"
 
@@ -124,8 +126,28 @@ void TeensyDriver::update(std::vector<double>& pos_commands,
 bool TeensyDriver::calibrateJoints(std::string calib_sequence) {
   std::string outMsg = "JC" + calib_sequence + "\n";
   RCLCPP_INFO(logger_, "Sending calibration command: %s", outMsg.c_str());
-  return sendCommand(outMsg);
+  return exchangeExpect(outMsg, "JC", 60000);
 }
+
+
+bool TeensyDriver::calibrateMask(std::string mask) {
+  std::string outMsg = "JM" + mask + "\n";
+  RCLCPP_INFO(logger_, "Sending calibration-mask command: %s", outMsg.c_str());
+
+  // Expect the Teensy to reply with JC (encoder calibration values) once complete.
+  return exchangeExpect(outMsg, "JC", 60000);
+}
+
+
+bool TeensyDriver::park() {
+  std::string outMsg = "PK\n";
+  RCLCPP_INFO(logger_, "Sending park command");
+
+  // Expect the Teensy to reply with PK acknowledgement.
+  return exchangeExpect(outMsg, "PK", 5000);
+}
+
+
 
 void TeensyDriver::getJointPositions(std::vector<double>& joint_positions) {
   // get current joint positions
@@ -153,6 +175,7 @@ bool TeensyDriver::sendCommand(std::string outMsg) { return exchange(outMsg); }
 
 // Send msg to board and collect data
 bool TeensyDriver::exchange(std::string outMsg) {
+  std::lock_guard<std::mutex> lock(serial_mtx_);
   std::string inMsg;
   std::string errTransmit = "";
 
@@ -164,6 +187,10 @@ bool TeensyDriver::exchange(std::string outMsg) {
 
   while (true) {
     receive(inMsg);
+    if (inMsg.size() < 2) {
+      continue;
+    }
+
     std::string header = inMsg.substr(0, 2);
 
     if (header == "DB") {
@@ -192,6 +219,9 @@ bool TeensyDriver::exchange(std::string outMsg) {
         // error message
         RCLCPP_INFO(logger_, "ERROR message: %s", inMsg.c_str());
         return false;
+      } else if (header == "PK") {
+        // Park acknowledgement
+        return true;         
       } else {
         // unknown header
         RCLCPP_WARN(logger_, "Unknown header %s", header.c_str());
@@ -202,6 +232,88 @@ bool TeensyDriver::exchange(std::string outMsg) {
   }
   return true;
 }
+
+
+bool TeensyDriver::exchangeExpect(const std::string& outMsg,
+                                  const std::string& expected_header,
+                                  int timeout_ms) {
+  // Prevent concurrent serial access from ros2_control thread + service thread
+  std::lock_guard<std::mutex> lock(serial_mtx_);
+
+  std::string inMsg;
+  std::string errTransmit;
+  
+  RCLCPP_INFO(logger_, "TX: %s", outMsg.c_str());
+
+  // 1) Transmit outbound message
+  if (!transmit(outMsg, errTransmit)) {
+    RCLCPP_ERROR(logger_, "Error in transmit: %s", errTransmit.c_str());
+    return false;
+  }
+
+  // 2) Wait until we read a message whose 2-char header matches expected_header
+  auto start = std::chrono::steady_clock::now();
+
+  while (true) {
+    auto now = std::chrono::steady_clock::now();
+    auto elapsed_ms =
+        std::chrono::duration_cast<std::chrono::milliseconds>(now - start).count();
+
+    if (elapsed_ms > timeout_ms) {
+      RCLCPP_ERROR(logger_, "Timeout waiting for '%s' after sending '%s'",
+                   expected_header.c_str(), outMsg.c_str());
+      return false;
+    }
+
+    receive(inMsg);
+    
+    RCLCPP_INFO(logger_, "RX: %s", inMsg.c_str());
+
+    if (inMsg.size() < 2) {
+      continue;
+    }
+
+    const std::string header = inMsg.substr(0, 2);
+
+    // Optional: keep these as passive logs (do not treat as success)
+    if (header == "DB") {
+      RCLCPP_DEBUG(logger_, "Teensy: %s", inMsg.c_str());
+      continue;
+    }
+    if (header == "WN") {
+      RCLCPP_WARN(logger_, "Teensy warning: %s", inMsg.c_str());
+      continue;
+    }
+
+    // Feed normal state updates into the driver (so state stays fresh)
+    if (header == "ST") {
+      checkInit(inMsg);
+    } else if (header == "JC") {
+      updateEncoderCalibrations(inMsg);
+    } else if (header == "JP") {
+      updateJointPositions(inMsg);
+    } else if (header == "JV") {
+      updateJointVelocities(inMsg);
+    } else if (header == "ES") {
+      updateEStopStatus(inMsg);
+    } else if (header == "ER") {
+      RCLCPP_ERROR(logger_, "Teensy error: %s", inMsg.c_str());
+      return false;
+    } else if (header == "PK") {
+      // Park acknowledgement (no parsing required)
+    } else {
+      // Unknown/unhandled header - not fatal, just ignore
+      RCLCPP_DEBUG(logger_, "Unhandled header '%s' msg '%s'",
+                   header.c_str(), inMsg.c_str());
+    }
+
+    // 3) Only succeed when we see the exact expected header
+    if (header == expected_header) {
+      return true;
+    }
+  }
+}
+
 
 bool TeensyDriver::transmit(std::string msg, std::string& err) {
   boost::system::error_code ec;

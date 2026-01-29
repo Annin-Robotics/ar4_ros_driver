@@ -43,8 +43,8 @@ class ControllerConfigSubstitution(Substitution):
 
 def generate_launch_description():
     ar_model_arg = DeclareLaunchArgument("ar_model",
-                                         default_value="mk3",
-                                         choices=["mk1", "mk2", "mk3"],
+                                         default_value="mk5",
+                                         choices=["mk1", "mk2", "mk3", "mk4", "mk5"],
                                          description="Model of AR4")
     ar_model_config = LaunchConfiguration("ar_model")
     tf_prefix_arg = DeclareLaunchArgument("tf_prefix",

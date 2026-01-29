@@ -10,6 +10,10 @@
 #include "math.h"
 #include "time.h"
 
+#include <mutex>
+#include <atomic>
+
+
 namespace annin_ar4_driver {
 
 class TeensyDriver {
@@ -25,7 +29,14 @@ class TeensyDriver {
   bool calibrateJoints(std::string calib_sequence);
   bool resetEStop();
   bool isEStopped();
-
+  bool calibrateMask(std::string mask);  // sends JMxxxxxx
+  bool park();                           // sends PK
+ 
+  // Exchange command and wait for a specific response header
+  bool exchangeExpect(const std::string& outMsg,
+                      const std::string& expected_header,
+                      int timeout_ms = 3000);
+  
   TeensyDriver();
 
  private:
@@ -43,6 +54,8 @@ class TeensyDriver {
 
   rclcpp::Logger logger_ = rclcpp::get_logger("teensy_driver");
   rclcpp::Clock clock_ = rclcpp::Clock(RCL_ROS_TIME);
+  
+  mutable std::mutex serial_mtx_;
 
   // Comms with teensy
   bool exchange(std::string outMsg);  // exchange joint commands/state

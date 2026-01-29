@@ -49,12 +49,12 @@ def generate_launch_description():
         package="controller_manager",
         executable="ros2_control_node",
         parameters=[
+            robot_description,
             ParameterFile(joint_controllers_cfg, allow_substs=True),
             {
                 "tf_prefix": tf_prefix
             },
         ],
-        remappings=[('~/robot_description', 'robot_description')],
         output="screen",
     )
 
@@ -137,12 +137,13 @@ def generate_launch_description():
         ))
     ld.add_action(
         DeclareLaunchArgument("ar_model",
-                              default_value="mk3",
-                              choices=["mk1", "mk2", "mk3"],
+                              default_value="mk5",
+                              choices=["mk1", "mk2", "mk3", "mk4", "mk5"],
                               description="Model of AR4"))
+    ld.add_action(robot_state_publisher_node)
     ld.add_action(controller_manager_node)
+    ld.add_action(joint_state_broadcaster)
     ld.add_action(spawn_joint_controller)
     ld.add_action(gripper_controller_spawner)
-    ld.add_action(robot_state_publisher_node)
-    ld.add_action(joint_state_broadcaster)
+    
     return ld
