@@ -22,13 +22,11 @@
 <!-- ========================= -->
 
 <link name="${tf_prefix}base_link">
-  <collision>
-    <origin rpy="0 0 -1.5708" xyz="0 0 0"/>
-    <geometry>
-      <mesh filename="package://annin_ar4_description/meshes/${robot_parameters['mesh_dir']}/Link_Base_Col.STL"
-            scale="0.001 0.001 0.001"/>
-    </geometry>
-  </collision>
+    <inertial>
+      <origin rpy="0 0 0" xyz="-4.6941E-06 0.054174 0.038824"/>
+      <mass value="0.7102"/>
+      <inertia ixx="0.0039943" ixy="3.697E-07" ixz="-5.7364E-08" iyy="0.0014946" iyz="-0.00036051" izz="0.0042554"/>
+    </inertial>
 </link>
 
 <!-- Visual-only aluminum -->
@@ -42,6 +40,8 @@
       <color rgba="0.863 0.863 0.863 1.0"/>
     </material>
   </visual>
+
+
 </link>
 <joint name="${tf_prefix}base_link_aluminum_joint" type="fixed">
   <parent link="${tf_prefix}base_link"/>
@@ -103,20 +103,12 @@
     <inertia ixx="0.0034" ixy="0.00042296" ixz="-0.00089231"
              iyy="0.0041778" iyz="0.0010848" izz="0.0027077"/>
   </inertial>
-
-  <collision>
-    <origin rpy="0 0 0" xyz="0 0 -0.092"/>
-    <geometry>
-      <mesh filename="package://annin_ar4_description/meshes/${robot_parameters['mesh_dir']}/Link_1_Col.STL"
-            scale="0.001 0.001 0.001"/>
-    </geometry>
-  </collision>
 </link>
 
 <!-- Visual-only aluminum (same as base link aluminum color) -->
 <link name="${tf_prefix}link_1_aluminum">
   <visual>
-    <origin xyz="0 0 -0.092" rpy="0 0 0"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://annin_ar4_description/meshes/${robot_parameters['mesh_dir']}/Link_1_Aluminum.STL"/>
     </geometry>
@@ -124,6 +116,14 @@
       <color rgba="0.863 0.863 0.863 1.0"/>
     </material>
   </visual>
+
+  <collision>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://annin_ar4_description/meshes/${robot_parameters['mesh_dir']}/Link_1_Col.STL"/>
+    </geometry>
+  </collision>
+
 </link>
 <joint name="${tf_prefix}link_1_aluminum_joint" type="fixed">
   <parent link="${tf_prefix}link_1"/>
@@ -134,7 +134,7 @@
 <!-- Visual-only motors (same black used on base motor in your newer style) -->
 <link name="${tf_prefix}link_1_motor">
   <visual>
-    <origin xyz="0 0 -0.092" rpy="0 0 0"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://annin_ar4_description/meshes/${robot_parameters['mesh_dir']}/Link_1_Motor.STL"/>
     </geometry>
@@ -153,7 +153,7 @@
     
 
     <joint name="${tf_prefix}joint_1" type="revolute">
-      <origin rpy="${pi} 0 0" xyz="0 0 0"/>
+      <origin rpy="${pi} 0 0" xyz="0 0 0.092"/>
       <parent link="${tf_prefix}base_link"/>
       <child link="${tf_prefix}link_1"/>
       <axis xyz="0 0 1"/>
@@ -174,23 +174,11 @@
     
 
  <link name="${tf_prefix}link_2">
-  <!-- Optional inertial placeholder (keep or replace with real values later) -->
   <inertial>
-    <origin rpy="0 0 0" xyz="0 0 0"/>
-    <mass value="0.1"/>
-    <inertia ixx="0.0001" ixy="0.0" ixz="0.0"
-             iyy="0.0001" iyz="0.0" izz="0.0001"/>
+    <origin rpy="0 0 0" xyz="0.064818 -0.11189 -0.038671"/>
+    <mass value="0.57738"/>
+    <inertia ixx="0.0047312" ixy="0.0022624" ixz="0.00032144" iyy="0.0020836" iyz="-0.00056569" izz="0.0056129"/>
   </inertial>
-
-  <!-- Collision -->
-  <collision>
-    <!-- offset fields (zero for now) -->
-    <origin rpy="3.14 0 0" xyz="0 0 -0.00887"/>
-    <geometry>
-      <mesh filename="package://annin_ar4_description/meshes/${robot_parameters['mesh_dir']}/Link_2_Col.STL"
-            scale="0.001 0.001 0.001"/>
-    </geometry>
-  </collision>
 </link>
 
 <!-- Visual-only aluminum -->
@@ -205,6 +193,14 @@
       <color rgba="0.863 0.863 0.863 1.0"/>
     </material>
   </visual>
+
+  <collision>
+    <origin xyz="0 0 -0.00887" rpy="3.14 0 0"/>
+    <geometry>
+      <mesh filename="package://annin_ar4_description/meshes/${robot_parameters['mesh_dir']}/Link_2_Col.STL"/>
+    </geometry>
+  </collision>
+
 </link>
 <joint name="${tf_prefix}link_2_aluminum_joint" type="fixed">
   <parent link="${tf_prefix}link_2"/>
@@ -271,7 +267,7 @@
 
 
     <joint name="${tf_prefix}joint_2" type="revolute">
-      <origin rpy="1.5708 0 -1.5708" xyz="0 0.0642 -0.16977"/>
+      <origin rpy="1.5708 0 -1.5708" xyz="0 0.06415 -0.07778"/>
       <parent link="${tf_prefix}link_1"/>
       <child link="${tf_prefix}link_2"/>
       <axis xyz="0 0 -1"/>
@@ -296,21 +292,12 @@
     <inertia ixx="0.0001685" ixy="-2.7713E-05" ixz="5.6885E-06"
              iyy="0.00012865" iyz="2.9256E-05" izz="0.00020744"/>
   </inertial>
-
-  <!-- Collision -->
-  <collision>
-    <origin rpy="0 0 0" xyz="0 0 -0.04271"/>
-    <geometry>
-      <mesh filename="package://annin_ar4_description/meshes/${robot_parameters['mesh_dir']}/Link_3_Col.STL"
-            scale="0.001 0.001 0.001"/>
-    </geometry>
-  </collision>
 </link>
 
 <!-- Visual-only aluminum -->
 <link name="${tf_prefix}link_3_aluminum">
   <visual>
-    <origin xyz="0 0 -0.04271" rpy="0 0 0"/>
+    <origin xyz="0 0 -0.03671" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://annin_ar4_description/meshes/${robot_parameters['mesh_dir']}/Link_3_Aluminum.STL"/>
     </geometry>
@@ -318,6 +305,14 @@
       <color rgba="0.863 0.863 0.863 1.0"/>
     </material>
   </visual>
+
+  <collision>
+    <origin xyz="0 0 -0.03671" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://annin_ar4_description/meshes/${robot_parameters['mesh_dir']}/Link_3_Col.STL"/>
+    </geometry>
+  </collision>
+
 </link>
 <joint name="${tf_prefix}link_3_aluminum_joint" type="fixed">
   <parent link="${tf_prefix}link_3"/>
@@ -328,7 +323,7 @@
 <!-- Visual-only motor -->
 <link name="${tf_prefix}link_3_motor">
   <visual>
-    <origin xyz="0 0 -0.04271" rpy="0 0 0"/>
+    <origin xyz="0 0 -0.03671" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://annin_ar4_description/meshes/${robot_parameters['mesh_dir']}/Link_3_Motor.STL"/>
     </geometry>
@@ -346,7 +341,7 @@
 
 
 <joint name="${tf_prefix}joint_3" type="revolute">
-  <origin rpy="0 0 3.1416" xyz="0 -0.305 0.007"/>
+  <origin rpy="0 0 3.1416" xyz="0 -0.305 0"/>
   <parent link="${tf_prefix}link_2"/>
   <child link="${tf_prefix}link_3"/>
   <axis xyz="0 0 -1"/>
@@ -370,16 +365,6 @@
     <inertia ixx="0.0030532" ixy="-1.8615E-05" ixz="-7.0047E-05"
              iyy="0.0031033" iyz="-2.3301E-05" izz="0.00022264"/>
   </inertial>
-
-  <!-- Collision -->
-  <collision>
-    <!-- offsets (unknown yet) -->
-    <origin rpy="0 0 -1.5708" xyz="0 0 -0.07594"/>
-    <geometry>
-      <mesh filename="package://annin_ar4_description/meshes/${robot_parameters['mesh_dir']}/Link_4_Col.STL"
-            scale="0.001 0.001 0.001"/>
-    </geometry>
-  </collision>
 </link>
 
 <!-- Visual-only aluminum -->
@@ -393,6 +378,14 @@
       <color rgba="0.863 0.863 0.863 1.0"/>
     </material>
   </visual>
+
+  <collision>
+    <origin xyz="0 0 -0.07594" rpy="0 0 -1.5708"/>
+    <geometry>
+      <mesh filename="package://annin_ar4_description/meshes/${robot_parameters['mesh_dir']}/Link_4_Col.STL"/>
+    </geometry>
+  </collision>
+
 </link>
 <joint name="${tf_prefix}link_4_aluminum_joint" type="fixed">
   <parent link="${tf_prefix}link_4"/>
@@ -456,7 +449,7 @@
 
 
     <joint name="${tf_prefix}joint_4" type="revolute">
-      <origin rpy="1.5708 0 -1.5708" xyz="0 0 0.0"/>
+      <origin rpy="1.5708 0 -1.5708" xyz="0 0 0"/>
       <parent link="${tf_prefix}link_3"/>
       <child link="${tf_prefix}link_4"/>
       <axis xyz="0 0 -1"/>
@@ -470,88 +463,140 @@
     
     
     
-    
 
-    <link name="${tf_prefix}link_5">
-      <inertial>
-        <origin rpy="0 0 0" xyz="0.0015066 -1.3102E-05 -0.012585"/>
-        <mass value="0.11562"/>
-        <inertia ixx="5.5035E-05" ixy="-1.019E-08" ixz="-2.6243E-06" iyy="8.2921E-05" iyz="1.4437E-08" izz="5.2518E-05"/>
-      </inertial>
-      <visual>
-        <origin rpy="0 0 0" xyz="0 0 0"/>
-        <geometry>
-          <mesh filename="file://$(find annin_ar4_description)/meshes/${robot_parameters['mesh_dir']}/link_5.STL"/>
-        </geometry>
-        <material name="">
-          <color rgba="1 1 0 1"/>
-        </material>
-      </visual>
-      <collision>
-        <origin rpy="0 0 0" xyz="0 0 0"/>
-        <geometry>
-          <mesh filename="file://$(find annin_ar4_description)/meshes/${robot_parameters['mesh_dir']}/link_5.STL"/>
-        </geometry>
-      </collision>
-    </link>
+  <!-- ===================== -->
+<!-- Link 5 visual sublinks -->
+<!-- ===================== -->
 
-    <joint name="${tf_prefix}joint_5" type="revolute">
-      <origin rpy="${pi} 0 -1.5708" xyz="0 0 -0.22263"/>
-      <parent link="${tf_prefix}link_4"/>
-      <child link="${tf_prefix}link_5"/>
-      <axis xyz="1 0 0"/>
-      <limit
-        lower="${robot_parameters['j5_limit_min']}"
-        upper="${robot_parameters['j5_limit_max']}"
-        effort="-1"
-        velocity="1.0472"
-      />
-    </joint>
+<link name="${tf_prefix}link_5">
+  <inertial>
+    <origin rpy="0 0 0" xyz="0.0015066 -1.3102E-05 -0.012585"/>
+    <mass value="0.11562"/>
+    <inertia ixx="5.5035E-05" ixy="-1.019E-08" ixz="-2.6243E-06"
+             iyy="8.2921E-05" iyz="1.4437E-08" izz="5.2518E-05"/>
+  </inertial>
+</link>
 
-    <link name="${tf_prefix}link_6">
-      <inertial>
+<!-- Aluminum -->
+<link name="${tf_prefix}link_5_aluminum">
+  <visual>
+    <origin xyz="0 0 -0.0275" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://annin_ar4_description/meshes/${robot_parameters['mesh_dir']}/Link_5_Aluminum.STL"/>
+    </geometry>
+    <material name="aluminum_mat">
+     <color rgba="0.863 0.863 0.863 1.0"/>
+   </material>
+  </visual>
+
+  <!-- Collision ONLY on aluminum -->
+  <collision>
+    <origin xyz="0 0 -0.0275" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://annin_ar4_description/meshes/${robot_parameters['mesh_dir']}/Link_5_Col.STL"/>
+    </geometry>
+  </collision>
+</link>
+
+<joint name="${tf_prefix}link_5_aluminum_joint" type="fixed">
+  <parent link="${tf_prefix}link_5"/>
+  <child  link="${tf_prefix}link_5_aluminum"/>
+  <origin xyz="0 0 0" rpy="0 0 0"/>
+</joint>
+
+<!-- Motor (visual only) -->
+<link name="${tf_prefix}link_5_motor">
+  <visual>
+    <origin xyz="0 0 -0.0275" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://annin_ar4_description/meshes/${robot_parameters['mesh_dir']}/Link_5_Motor.STL"/>
+    </geometry>
+   <material name="motor_mat">
+    <color rgba="0.078 0.078 0.078 1.0"/>
+    </material>
+  </visual>
+</link>
+
+<joint name="${tf_prefix}link_5_motor_joint" type="fixed">
+  <parent link="${tf_prefix}link_5"/>
+  <child  link="${tf_prefix}link_5_motor"/>
+  <origin xyz="0 0 0" rpy="0 0 0"/>
+</joint>
+
+<joint name="${tf_prefix}joint_5" type="revolute">
+  <origin rpy="${pi} 0 -1.5708" xyz="0 0 -0.22294"/>
+  <parent link="${tf_prefix}link_4"/>
+  <child link="${tf_prefix}link_5"/>
+  <axis xyz="1 0 0"/>
+  <limit lower="${robot_parameters['j5_limit_min']}"
+         upper="${robot_parameters['j5_limit_max']}"
+         effort="-1"
+         velocity="1.0472"/>
+</joint>
+
+
+<!-- ===================== -->
+<!-- Link 6 visual sublinks -->
+<!-- ===================== -->
+
+<link name="${tf_prefix}link_6">
+   <inertial>
         <origin rpy="0 0 0" xyz="2.9287E-10 -1.6472E-09 0.0091432"/>
         <mass value="0.013863"/>
         <inertia ixx="1.3596E-06" ixy="3.0585E-13" ixz="5.7102E-14" iyy="1.7157E-06" iyz="6.3369E-09" izz="2.4332E-06"/>
       </inertial>
-      <visual>
-        <origin rpy="0 0 0" xyz="0 0 0"/>
-        <geometry>
-          <mesh filename="file://$(find annin_ar4_description)/meshes/${robot_parameters['mesh_dir']}/link_6.STL"/>
-        </geometry>
-        <material name="">
-          <color rgba="1 1 0 1"/>
-        </material>
-      </visual>
-      <collision>
-        <origin rpy="0 0 0" xyz="0 0 0"/>
-        <geometry>
-          <mesh filename="file://$(find annin_ar4_description)/meshes/${robot_parameters['mesh_dir']}/link_6.STL"/>
-        </geometry>
-      </collision>
-    </link>
+</link>
 
-    <joint name="${tf_prefix}joint_6" type="revolute">
-      <origin rpy="0 0 3.1416" xyz="0.000 0 ${robot_parameters['l6_length']}"/>
-      <parent link="${tf_prefix}link_5"/>
-      <child link="${tf_prefix}link_6"/>
-      <axis xyz="0 0 1"/>
-      <limit
-        lower="${robot_parameters['j6_limit_min']}"
-        upper="${robot_parameters['j6_limit_max']}"
-        effort="-1"
-        velocity="1.0472"
-      />
-    </joint>
+<!-- Aluminum -->
+<link name="${tf_prefix}link_6_aluminum">
+  <visual>
+    <!-- match your existing working offsets here if needed -->
+    <origin xyz="0 0 -0.016" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://annin_ar4_description/meshes/${robot_parameters['mesh_dir']}/Link_6_Aluminum.STL"/>
+    </geometry>
+    <material name="aluminum_mat"/>
+  </visual>
+
+  <!-- Collision ONLY on aluminum -->
+  <collision>
+    <origin xyz="0 0 -0.016" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://annin_ar4_description/meshes/${robot_parameters['mesh_dir']}/Link_6_Col.STL"/>
+    </geometry>
+  </collision>
+</link>
+
+<joint name="${tf_prefix}link_6_aluminum_joint" type="fixed">
+  <parent link="${tf_prefix}link_6"/>
+  <child  link="${tf_prefix}link_6_aluminum"/>
+  <origin xyz="0 0 0" rpy="0 0 0"/>
+</joint>
+
+<joint name="${tf_prefix}joint_6" type="revolute">
+  <!-- copy exact origin from your previous working joint_6 -->
+  <origin rpy="0 0 0" xyz="0 0 0.041"/>
+  <parent link="${tf_prefix}link_5"/>
+  <child link="${tf_prefix}link_6"/>
+  <axis xyz="0 0 1"/>
+  <limit
+    lower="${robot_parameters['j6_limit_min']}"
+    upper="${robot_parameters['j6_limit_max']}"
+    effort="-1"
+    velocity="1.5708"/>
+</joint>
+
+    
 
     <!-- center of the end effector mounting surface on link_6 -->
     <link name="${tf_prefix}ee_link" />
     <joint name="${tf_prefix}ee_joint" type="fixed">
       <parent link="${tf_prefix}link_6" />
       <child link="${tf_prefix}ee_link" />
-      <origin xyz="0 0 0.0" rpy="0 0 0" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
     </joint>
+
+    
 
   </xacro:macro>
 </robot>
-

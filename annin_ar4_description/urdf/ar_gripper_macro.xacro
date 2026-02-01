@@ -17,7 +17,7 @@
           <mesh filename="file://$(find annin_ar4_description)/meshes/ar4_gripper/gripper_base_link.stl" />
         </geometry>
         <material name="">
-          <color rgba="1 1 0 1"/>
+          <color rgba="0.627 0.627 0.627 1.0"/>
         </material>
       </visual>
       <collision>
@@ -37,7 +37,7 @@
           <mesh filename="file://$(find annin_ar4_description)/meshes/ar4_gripper/gripper_jaw1_link.stl" />
         </geometry>
         <material name="">
-          <color rgba="1 1 0 1"/>
+          <color rgba="0.078 0.078 0.078 1.0"/>
         </material>
       </visual>
       <collision>
@@ -57,7 +57,7 @@
           <mesh filename="file://$(find annin_ar4_description)/meshes/ar4_gripper/gripper_jaw2_link.stl" />
         </geometry>
         <material name="">
-          <color rgba="1 1 0 1"/>
+          <color rgba="0.078 0.078 0.078 1.0"/>
         </material>
       </visual>
       <collision>

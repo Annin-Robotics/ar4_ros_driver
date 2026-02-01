@@ -40,5 +40,32 @@
     <disable_collisions link1="${tf_prefix}link_4" link2="${tf_prefix}link_5" reason="Adjacent" />
     <disable_collisions link1="${tf_prefix}link_5" link2="${tf_prefix}link_6" reason="Adjacent" />
 
+
+    <!-- Adjacent collision bodies -->
+    <disable_collisions link1="${tf_prefix}link_1_aluminum" link2="${tf_prefix}link_2_aluminum" reason="Adjacent" />
+    <disable_collisions link1="${tf_prefix}link_2_aluminum" link2="${tf_prefix}link_3_aluminum" reason="Adjacent" />
+    <disable_collisions link1="${tf_prefix}link_3_aluminum" link2="${tf_prefix}link_4_aluminum" reason="Adjacent" />
+    <disable_collisions link1="${tf_prefix}link_4_aluminum" link2="${tf_prefix}link_5_aluminum" reason="Adjacent" />
+    <disable_collisions link1="${tf_prefix}link_5_aluminum" link2="${tf_prefix}link_6_aluminum" reason="Adjacent" />
+    <!-- Near-adjacent -->
+    <disable_collisions link1="${tf_prefix}link_1_aluminum" link2="${tf_prefix}link_3_aluminum" reason="Adjacent" />
+    <disable_collisions link1="${tf_prefix}link_2_aluminum" link2="${tf_prefix}link_4_aluminum" reason="Adjacent" />
+    <disable_collisions link1="${tf_prefix}link_3_aluminum" link2="${tf_prefix}link_5_aluminum" reason="Adjacent" />
+    <disable_collisions link1="${tf_prefix}link_4_aluminum" link2="${tf_prefix}link_6_aluminum" reason="Adjacent" />
+    <!-- Gripper adjacency -->
+    <disable_collisions link1="${tf_prefix}link_6_aluminum" link2="${tf_prefix}gripper_base_link" reason="Adjacent" />
+    <disable_collisions link1="${tf_prefix}link_5_aluminum" link2="${tf_prefix}gripper_base_link" reason="Adjacent" />
+
+
+
+
+
+ 
+
+
+
+
+
+
   </xacro:macro>
 </robot>
