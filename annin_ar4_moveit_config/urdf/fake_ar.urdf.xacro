@@ -1,40 +1,57 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://wiki.ros.org/xacro" name="$(arg ar_model)">
+
+  <!-- Match real robot args, but default to demo-friendly values -->
+  <xacro:arg name="serial_port" default="/dev/ttyACM0"/>
+  <xacro:arg name="arduino_serial_port" default="/dev/ttyUSB0"/>
+  <xacro:arg name="calibrate" default="False"/>
+  <xacro:arg name="tf_prefix" default=""/>
+  <xacro:arg name="include_gripper" default="true"/>
+
+  <!-- Core robot -->
   <xacro:include filename="$(find annin_ar4_description)/urdf/ar_macro.xacro"/>
-  <xacro:include filename="$(find annin_ar4_description)/urdf/ar_gripper_macro.xacro"/>
   <xacro:include filename="$(find annin_ar4_description)/urdf/ar.ros2_control.xacro"/>
-  <xacro:include filename="$(find annin_ar4_description)/urdf/ar_gripper.ros2_control.xacro"/>
 
-  <xacro:arg name="tf_prefix" default="" />
-
+  <!-- World root (demo style) -->
   <link name="world" />
+
   <xacro:ar_robot
     tf_prefix="$(arg tf_prefix)"
     parent="world"
-    robot_parameters_file="$(find annin_ar4_description)/config/$(arg ar_model).yaml"
-  >
+    robot_parameters_file="$(find annin_ar4_description)/config/$(arg ar_model).yaml">
     <origin xyz="0 0 0" rpy="0 0 0" />
   </xacro:ar_robot>
-  <xacro:ar_gripper 
-    tf_prefix="$(arg tf_prefix)"
-    parent="$(arg tf_prefix)ee_link" 
-  />
 
+  <!-- Fake (mock) ros2_control for the arm -->
   <xacro:ar_ros2_control
     ar_model="$(arg ar_model)"
     plugin_name="mock_components/GenericSystem"
-    serial_port="/dev/ttyACM0"
-    calibrate="False"
+    serial_port="$(arg serial_port)"
+    calibrate="$(arg calibrate)"
     robot_parameters_file="$(find annin_ar4_description)/config/$(arg ar_model).yaml"
     joint_offset_parameters_file="$(find annin_ar4_driver)/config/joint_offsets/$(arg ar_model).yaml"
     driver_parameters_file="$(find annin_ar4_driver)/config/driver.yaml"
     tf_prefix="$(arg tf_prefix)"
   />
-  <xacro:ar_gripper_ros2_control
-    name="ARGripperFakeSystem"
-    plugin_name="mock_components/GenericSystem"
-    serial_port="/dev/ttyUSB0"
-    driver_parameters_file="$(find annin_ar4_driver)/config/gripper_driver.yaml"
-    tf_prefix="$(arg tf_prefix)"
-  />
+
+  <!-- Optional gripper (match real layout) -->
+  <xacro:if value="$(arg include_gripper)">
+
+    <xacro:include filename="$(find annin_ar4_description)/urdf/ar_gripper_macro.xacro"/>
+    <xacro:include filename="$(find annin_ar4_description)/urdf/ar_gripper.ros2_control.xacro"/>
+
+    <xacro:ar_gripper
+      tf_prefix="$(arg tf_prefix)"
+      parent="$(arg tf_prefix)ee_link"
+    />
+
+    <xacro:ar_gripper_ros2_control
+      name="ARGripperFakeSystem"
+      plugin_name="mock_components/GenericSystem"
+      serial_port="$(arg arduino_serial_port)"
+      driver_parameters_file="$(find annin_ar4_driver)/config/gripper_driver.yaml"
+      tf_prefix="$(arg tf_prefix)"
+    />
+  </xacro:if>
+
 </robot>

@@ -1,4 +1,4 @@
-mesh_dir: ar4_mk3
+mesh_dir: ar4_mk5
 
 j1_limit_min: !degrees -170
 j2_limit_min: !degrees -42
