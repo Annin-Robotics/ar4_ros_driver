@@ -6,7 +6,7 @@ Tested with ROS 2 Jazzy on Ubuntu 24.04. Also has branch for Humble
 
 **Supports:**
 
-- AR4 MK1 (Original version), MK2, MK3
+- AR4 MK1 (Original version), MK2, MK3, MK4
 - AR4 servo gripper
 
 **Features:**
@@ -49,40 +49,293 @@ The following projects showcases additional features and capabilities built on t
 - **annin_ar4_gazebo**
   - Simulation on Gazebo.
 
-## Installation
+## Installation (ROS 2 Jazzy – Ubuntu 24.04)
 
-> 💡 It's generally a good idea to first ensure that your robot arm works with the official [AR4 Control Software](https://anninrobotics.com/downloads/), where there's better tools for debugging mechanical and electrical issues. 
+> 💡 **Recommendation**
+> Before using ROS, it is strongly recommended that you first verify your AR4 robot works correctly using the official **AR4 Control Software** from Annin Robotics. This provides better tools for debugging mechanical, electrical, and calibration issues before introducing ROS.
 
-- Install [ROS 2 Jazzy](https://docs.ros.org/en/jazzy/Installation.html) for Ubuntu 24.04
-- Clone this repository:
-  ```bash
-  git clone https://github.com/ycheng517/ar4_ros_driver
-  ```
-- Install workspace dependencies:
-  ```bash
-  rosdep install --from-paths . --ignore-src -r -y
-  ```
-- Build the workspace:
-  ```bash
-  colcon build
-  ```
-- Source the workspace:
-  ```bash
-  source install/setup.bash
-  ```
-- Enable serial port access if you haven't already done so:
-  ```bash
-  sudo addgroup $USER dialout
-  ```
-  You will need to log out and back in for changes to take effect.
+This repository is developed and tested against **ROS 2 Jazzy on Ubuntu 24.04**. The installation process consists of several layers:
 
-### Firmware Flashing
+1. Install ROS 2 Jazzy (base system)
+2. Create and build a ROS 2 workspace
+3. Install ROS control and MoveIt
+4. Clone and build the AR4 ROS driver
+5. Configure serial permissions
+6. Install Arduino + Teensy toolchain
+7. Flash firmware to Teensy and Arduino Nano
 
-The Teensy and Arduino Nano sketches provided in [annin_ar4_firmware](./annin_ar4_firmware/)
-are compatible with the default hardware. To flash it, follow the same
-procedure as specified in [AR4 Robot Setup](https://www.youtube.com/watch?v=OL6lXu8VU4s).
-An extra step required is to install [Bounce2](https://github.com/thomasfredericks/Bounce2)
-from the Library Manager in Arduino.
+The sections below walk through these steps in a clean, end‑to‑end order.
+
+---
+
+### 1. Install ROS 2 Jazzy
+
+Follow the **official ROS 2 Jazzy installation guide for Ubuntu (Debian packages)**:
+
+👉 [https://docs.ros.org/en/jazzy/Installation/Ubuntu-Install-Debs.html](https://docs.ros.org/en/jazzy/Installation/Ubuntu-Install-Debs.html)
+
+Make sure that:
+
+* You complete the **Environment setup** step
+* You can run `ros2 --version` successfully
+
+> ⚠️ Do **not** skip this step or attempt to partially install ROS.
+
+---
+
+### 2. Create a ROS 2 Workspace
+
+```bash
+mkdir -p ~/ros2_ws/src
+cd ~/ros2_ws/src
+```
+
+This creates a standard ROS 2 workspace layout:
+
+```
+ros2_ws/
+ ├── src/
+ ├── build/
+ ├── install/
+ └── log/
+```
+
+---
+
+### 3. Clone the AR4 ROS Driver
+
+```bash
+git clone https://github.com/Annin-Robotics/ar4_ros_driver.git
+```
+
+Your workspace should now look like:
+
+```
+~/ros2_ws/src/ar4_ros_driver
+```
+
+---
+
+### 4. Install ROS Dependencies
+
+Initialize and update `rosdep` (only required once per system):
+
+```bash
+sudo rosdep init
+rosdep update
+```
+
+Install all package dependencies for the workspace:
+
+```bash
+cd ~/ros2_ws
+rosdep install --from-paths src --ignore-src -r -y
+```
+
+---
+
+### 5. Install ros2_control
+
+The AR4 driver is built on **ros2_control**, which provides the hardware interface layer between MoveIt and the robot.
+
+```bash
+sudo apt update
+sudo apt install -y \
+  ros-jazzy-ros2-control \
+  ros-jazzy-ros2-controllers \
+  ros-jazzy-controller-manager
+```
+
+---
+
+### 6. Install MoveIt
+
+MoveIt provides motion planning, collision checking, and trajectory execution.
+
+```bash
+sudo apt update
+sudo apt install -y ros-jazzy-moveit
+```
+
+---
+
+### 7. Build the Workspace
+
+Source ROS and build the workspace:
+
+```bash
+source /opt/ros/jazzy/setup.bash
+cd ~/ros2_ws
+colcon build
+```
+
+Overlay the workspace:
+
+```bash
+source ~/ros2_ws/install/setup.bash
+```
+
+---
+
+### 8. Automatically Source ROS (Recommended)
+
+To avoid re‑sourcing ROS every terminal session, add the following lines to your `~/.bashrc`:
+
+```bash
+source /opt/ros/jazzy/setup.bash
+source ~/ros2_ws/install/setup.bash
+```
+
+Reload:
+
+```bash
+source ~/.bashrc
+```
+
+---
+
+### 9. Verify Installation (MoveIt Demo)
+
+Before connecting real hardware, verify that ROS + MoveIt are working:
+
+```bash
+ros2 launch annin_ar4_moveit_config demo.launch.py
+```
+
+This should open RViz with the AR4 model and interactive planning tools.
+
+---
+
+### 10. Enable Serial Port Access
+
+Required for communicating with the Teensy and Arduino Nano:
+
+```bash
+sudo adduser $USER dialout
+```
+
+Log out and back in (or reboot) for the change to take effect.
+
+---
+
+## Firmware Flashing
+
+The AR4 uses **two microcontrollers**:
+
+* **Teensy 4.1** – main motion controller
+* **Arduino Nano** – servo gripper controller (if used)
+
+Both must be flashed before running the ROS driver.
+
+---
+
+### 1. Install Arduino IDE (2.x)
+
+#### Install FUSE (required for AppImage)
+
+Ubuntu 24.04:
+
+```bash
+sudo apt update
+sudo apt install -y libfuse2t64
+```
+
+#### Download and Run Arduino IDE
+
+```bash
+mkdir -p ~/apps/arduino
+cd ~/apps/arduino
+wget https://downloads.arduino.cc/arduino-ide/arduino-ide_2.3.6_Linux_64bit.AppImage -O arduino-ide.AppImage
+chmod +x arduino-ide.AppImage
+./arduino-ide.AppImage --no-sandbox
+```
+
+---
+
+### 2. Install Teensyduino
+
+Follow PJRC’s official instructions:
+
+👉 [https://www.pjrc.com/teensy/td_download.html](https://www.pjrc.com/teensy/td_download.html)
+
+In Arduino IDE:
+
+1. Open **Preferences**
+2. Add the following URL to **Additional Boards Manager URLs**:
+
+```
+https://www.pjrc.com/teensy/package_teensy_index.json
+```
+
+3. Open **Tools → Board → Boards Manager**
+4. Search for and install **Teensy**
+5. Select **Teensy 4.1** as the active board
+
+---
+
+### 3. Install Required Arduino Libraries
+
+From **Tools → Manage Libraries**, install:
+
+* **Bounce2**
+
+---
+
+### 4. Install PJRC udev Rules
+
+Required so Linux can access the Teensy without sudo:
+
+```bash
+cd ~/Downloads
+wget https://www.pjrc.com/teensy/00-teensy.rules
+sudo cp 00-teensy.rules /etc/udev/rules.d/
+sudo udevadm control --reload-rules
+sudo udevadm trigger
+```
+
+---
+
+### 5. Flash the Firmware
+
+Firmware is located in:
+
+```
+annin_ar4_firmware/
+```
+
+#### Teensy 4.1
+
+* Open the Teensy firmware sketch in Arduino IDE
+* Select **Board: Teensy 4.1**
+* Select the correct USB port
+* Click **Upload**
+
+#### Arduino Nano (Gripper)
+
+* Open the gripper firmware sketch
+* Select **Board: Arduino Nano**
+* Select **Processor: ATmega328P (Old Bootloader)** if required
+* Click **Upload**
+
+---
+
+### 6. Calibration Required
+
+⚠️ After flashing firmware or power cycling the robot:
+
+* A **calibration run is required**
+* This is normal and expected behavior
+
+Calibration is triggered automatically when launching the driver with:
+
+```bash
+calibrate:=True
+```
+
+---
+
+At this point, the system is ready to be launched with real hardware.
+
 
 ### [Optional] Running in Docker Container
 
