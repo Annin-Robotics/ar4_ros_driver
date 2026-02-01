@@ -79,8 +79,6 @@ Make sure that:
 * You complete the **Environment setup** step
 * You can run `ros2 --version` successfully
 
-> ⚠️ Do **not** skip this step or attempt to partially install ROS.
-
 ---
 
 ### 2. Create a ROS 2 Workspace
@@ -199,7 +197,7 @@ source ~/.bashrc
 Before connecting real hardware, verify that ROS + MoveIt are working:
 
 ```bash
-ros2 launch annin_ar4_moveit_config demo.launch.py
+ros2 launch annin_ar4_moveit_config demo.launch.py ar_model:=mk4
 ```
 
 This should open RViz with the AR4 model and interactive planning tools.
@@ -375,7 +373,7 @@ If you are unfamiliar with MoveIt, it is recommended to start with this to explo
 The robot description, moveit interface and RViz will all be loaded in the single demo launch file
 
 ```bash
-ros2 launch annin_ar4_moveit_config demo.launch.py
+ros2 launch annin_ar4_moveit_config demo.launch.py ar_model:=mk4
 ```
 
 ---
@@ -385,12 +383,12 @@ ros2 launch annin_ar4_moveit_config demo.launch.py
 Start the `annin_ar4_driver` module, which will load configs and the robot description:
 
 ```bash
-ros2 launch annin_ar4_driver driver.launch.py calibrate:=True
+ros2 launch annin_ar4_driver driver.launch.py ar_model:=mk4 calibrate:=True include_gripper:=True
 ```
 
 Available Launch Arguments:
 
-- `ar_model`: The model of the AR4. Options are `mk1`, `mk2`, or `mk3`. Defaults to `mk3`.
+- `ar_model`: The model of the AR4. Options are `mk1`, `mk2`, `mk3` or `mk4`. Defaults to `mk4`.
 - `calibrate`: Whether to calibrate the robot arm (determine the absolute position
   of each joint).
 - `include_gripper`: Whether to include the servo gripper. Defaults to: `include_gripper:=True`.
@@ -445,14 +443,96 @@ ros2 launch annin_ar4_moveit_config moveit.launch.py use_sim_time:=true include_
 
 You can now plan in RViz and control the simulated arm.
 
-## Tuning and Tweaks
+---
 
-### Tuning Joint Offsets
+### Manual & Terminal Calibration Commands
 
-If for some reason your robot's joint positions appear misaligned after moving
-to the home position, you can adjust the joint offsets in the
-[joint_offsets/](./annin_ar4_driver/config/joint_offsets/) config folder.
-Select and modify the YAML file corresponding to your AR model to fine-tune the joint positions.
+The following ROS 2 commands are useful during setup, testing, and manual calibration.  
+All commands assume your ROS workspace has been sourced.
+
+#### Close Gripper
+
+    ros2 action send_goal /gripper_controller/gripper_cmd \
+      control_msgs/action/GripperCommand \
+      "{command: {position: 0.012, max_effort: 0.0}}"
+
+#### Open Gripper
+
+    ros2 action send_goal /gripper_controller/gripper_cmd \
+      control_msgs/action/GripperCommand \
+      "{command: {position: 0.000, max_effort: 0.0}}"
+
+#### Command Robot to Vertical Rest / Park Position
+
+This is the **recommended pose when powering off the robot**.
+
+    ros2 service call /park std_srvs/srv/Trigger "{}"
+
+#### Manually Calibrate Selected Joints
+
+    ros2 service call /calibrate_mask annin_ar4_driver/srv/CalibrateMask "{mask: '000011'}"
+
+##### Calibration Mask Explanation
+
+The calibration mask is a **6-character string**, one character per joint, ordered as:
+
+    [J1][J2][J3][J4][J5][J6]
+
+Each character may be:
+- `1` → Calibrate this joint
+- `0` → Skip this joint
+
+Examples:
+- `000011` → Calibrate **J5 and J6 only**
+- `111111` → Calibrate **all joints**
+- `100000` → Calibrate **J1 only**
+- `001100` → Calibrate **J3 and J4 only**
+
+This allows selective recalibration when only certain joints have been mechanically adjusted.
+
+---
+
+### Tuning Joint Offsets (Firmware-Level)
+
+If your robot joints appear slightly misaligned after calibration (for example, a joint that is not perfectly vertical or horizontal when commanded to zero), joint offsets should be adjusted **directly in the Teensy firmware**, not in ROS configuration files.
+
+Near the top of the Teensy sketch file, locate the following array:
+
+    float CAL_OFFSET_DEG[NUM_JOINTS] = { 6.2, -3.8, 0, 0, 0, 0 };
+
+This array defines a **per-joint angular offset in degrees** that is applied after calibration to compensate for small mechanical and assembly tolerances.
+
+Joint index mapping:
+- Index 0 → J1
+- Index 1 → J2
+- Index 2 → J3
+- Index 3 → J4
+- Index 4 → J5
+- Index 5 → J6
+
+#### How to Tune Joint Offsets
+
+1. Perform a normal calibration sequence.
+2. Command the robot to the vertical rest / park position.
+3. Using a **digital level or angle gauge**, measure each joint.
+4. If a joint is not aligned as expected:
+   - Add a **positive value** if the joint must rotate further in the positive direction.
+   - Add a **negative value** if the joint must rotate back in the negative direction.
+5. Update the corresponding value in `CAL_OFFSET_DEG`.
+6. Reflash the Teensy firmware and re-run calibration.
+
+#### Example
+
+If Joint 1 requires a **+6.2°** correction and Joint 2 requires a **−3.8°** correction:
+
+    float CAL_OFFSET_DEG[NUM_JOINTS] = { 6.2, -3.8, 0, 0, 0, 0 };
+
+Notes:
+- Any change to `CAL_OFFSET_DEG` **requires reflashing the Teensy**
+- These offsets are intended for **fine-tuning only**
+- Large errors usually indicate a mechanical alignment issue
+
+---
 
 ### Switching to Position Control
 
