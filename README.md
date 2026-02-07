@@ -247,6 +247,64 @@ wget https://downloads.arduino.cc/arduino-ide/arduino-ide_2.3.6_Linux_64bit.AppI
 chmod +x arduino-ide.AppImage
 ./arduino-ide.AppImage --no-sandbox
 ```
+---
+
+---
+
+## [Optional] Add Arduino IDE to Applications Menu (Icon & Launcher)
+
+When running the Arduino IDE as an AppImage, it will not automatically appear in the Ubuntu Applications menu or taskbar. The steps below add a proper icon, launcher entry, and optional terminal shortcut.
+
+### Add Arduino Icon (for proper launcher appearance)
+
+    sudo mkdir -p /usr/share/icons/hicolor/256x256/apps
+    sudo wget -O /usr/share/icons/hicolor/256x256/apps/arduino.png \
+      https://upload.wikimedia.org/wikipedia/commons/8/87/Arduino_Logo.svg
+    sudo update-icon-caches /usr/share/icons/hicolor
+
+### Create a Launcher Shortcut (Applications Menu)
+
+Create and edit the launcher file:
+
+    nano ~/.local/share/applications/arduino-ide.desktop
+
+Paste the following contents into the file:
+
+    [Desktop Entry]
+    Name=Arduino IDE
+    Comment=Arduino IDE 2.x
+    Exec=/home/chris/apps/arduino/arduino-ide.AppImage --no-sandbox
+    Icon=/usr/share/icons/hicolor/256x256/apps/arduino.png
+    Type=Application
+    Terminal=false
+    Categories=Development;IDE;Electronics;
+    StartupNotify=true
+
+Save and exit the editor:
+
+- Press **Ctrl + O**, then **Enter**
+- Press **Ctrl + X**
+
+Make the launcher executable and update the desktop database:
+
+    chmod +x ~/.local/share/applications/arduino-ide.desktop
+    sudo update-desktop-database
+
+### Launch and Pin Arduino IDE
+
+- Press the **Super (Windows)** key and type **Arduino**
+- The Arduino IDE should appear in the Applications list
+- Right-click → **Add to Favorites** to pin it to the taskbar
+
+### [Optional] Create a Terminal Shortcut
+
+To allow launching Arduino from any terminal:
+
+    sudo ln -s /home/chris/apps/arduino/arduino-ide.AppImage /usr/local/bin/arduino
+
+You can now launch the IDE with:
+
+    arduino
 
 ---
 
@@ -405,14 +463,6 @@ Start MoveIt and RViz:
 ros2 launch annin_ar4_moveit_config moveit.launch.py
 ```
 
-Available Launch Arguments:
-
-- `ar_model`: The model of the AR4. Options are `mk1`, `mk2`, or `mk3`. Defaults to `mk3`.
-- `include_gripper`: Whether to include the servo gripper. Defaults to:
-  `include_gripper:=True`.
-- `use_sim_time`: Make Moveit use simulation time. Should only be enabled when
-  running with Gazebo. Defaults to: `use_sim_time:=False`.
-
 You can now plan in RViz and control the real-world arm. Joint commands and joint states will be updated through the hardware interface.
 
 NOTE: At any point you may interrupt the robot movement by pressing the E-Stop button
@@ -539,6 +589,8 @@ Notes:
 By default this repo uses velocity-based joint trajectory control. It allows the arm to move a lot faster and the arm movement is also a lot smoother. If for any
 reason you'd like to use the simpler classic position-only control mode, you can
 set `velocity_control_enabled: false` in [driver.yaml](./annin_ar4_driver/config/driver.yaml). Note that you'll need to reduce velocity and acceleration scaling in order for larger motions to succeed.
+
+---
 
 ### Gripper Overcurrent Protection
 
