@@ -249,8 +249,6 @@ chmod +x arduino-ide.AppImage
 ```
 ---
 
----
-
 ## [Optional] Add Arduino IDE to Applications Menu (Icon & Launcher)
 
 When running the Arduino IDE as an AppImage, it will not automatically appear in the Ubuntu Applications menu or taskbar. The steps below add a proper icon, launcher entry, and optional terminal shortcut.
@@ -500,13 +498,13 @@ You can now plan in RViz and control the simulated arm.
 The following ROS 2 commands are useful during setup, testing, and manual calibration.  
 All commands assume your ROS workspace has been sourced.
 
-#### Close Gripper
+#### Open Gripper
 
     ros2 action send_goal /gripper_controller/gripper_cmd \
       control_msgs/action/GripperCommand \
       "{command: {position: 0.012, max_effort: 0.0}}"
 
-#### Open Gripper
+#### Close Gripper
 
     ros2 action send_goal /gripper_controller/gripper_cmd \
       control_msgs/action/GripperCommand \
