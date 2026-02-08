@@ -18,7 +18,7 @@ String MODEL = "";
 
 const int NUM_JOINTS = 6;
 // User-defined calibration offsets in DEGREES (positive means add angle)
-float CAL_OFFSET_DEG[NUM_JOINTS] = { 6.2, -3.8, 0, 0, 0, 0 };
+float CAL_OFFSET_DEG[NUM_JOINTS] = { 1.2, -0.8, 0, 0, 0, 0 };
 
 const int ESTOP_PIN = 39;
 const int STEP_PINS[] = { 0, 2, 4, 6, 8, 10 };

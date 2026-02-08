@@ -546,7 +546,7 @@ If your robot joints appear slightly misaligned after calibration (for example, 
 
 Near the top of the Teensy sketch file, locate the following array:
 
-    float CAL_OFFSET_DEG[NUM_JOINTS] = { 6.2, -3.8, 0, 0, 0, 0 };
+    float CAL_OFFSET_DEG[NUM_JOINTS] = { 1.2, -0.8, 0, 0, 0, 0 };
 
 This array defines a **per-joint angular offset in degrees** that is applied after calibration to compensate for small mechanical and assembly tolerances.
 
@@ -571,9 +571,9 @@ Joint index mapping:
 
 #### Example
 
-If Joint 1 requires a **+6.2°** correction and Joint 2 requires a **−3.8°** correction:
+If Joint 1 requires a **+1.2°** correction and Joint 2 requires a **−0.8°** correction:
 
-    float CAL_OFFSET_DEG[NUM_JOINTS] = { 6.2, -3.8, 0, 0, 0, 0 };
+    float CAL_OFFSET_DEG[NUM_JOINTS] = { 1.2, -0.8, 0, 0, 0, 0 };
 
 Notes:
 - Any change to `CAL_OFFSET_DEG` **requires reflashing the Teensy**
