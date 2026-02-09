@@ -152,7 +152,9 @@ MoveIt provides motion planning, collision checking, and trajectory execution.
 
 ```bash
 sudo apt update
-sudo apt install -y ros-jazzy-moveit
+sudo apt full-upgrade -y
+sudo apt install -y ros-jazzy-moveit ros-jazzy-moveit-py
+sudo ldconfig
 ```
 
 ---
@@ -593,3 +595,67 @@ set `velocity_control_enabled: false` in [driver.yaml](./annin_ar4_driver/config
 ### Gripper Overcurrent Protection
 
 See the [Gripper Overcurrent Protection](./docs/gripper_overcurrent_protection.md) page.
+
+---
+
+## Simple Node Example (C++ / MoveIt)
+
+This example demonstrates a minimal C++ ROS 2 node using **MoveIt’s MoveGroupInterface** to:
+- open the gripper
+- move the arm to a safe joint pose
+- move to a pick pose
+- close the gripper
+- return to the safe pose
+- return to a place pose
+- open the gripper
+
+### 1. Create the demo package
+
+cd ~/ros2_ws/src
+
+ros2 pkg create ar4_moveit_cpp_demo --build-type ament_cmake \
+  --dependencies rclcpp moveit_ros_planning_interface
+
+### 2. Add the example source files
+
+Copy `simple_pick_place_mgi.cpp` from the example folder into:
+
+ar4_moveit_cpp_demo/src/
+
+Replace the generated `CMakeLists.txt` in:
+
+ar4_moveit_cpp_demo/
+
+with the `CMakeLists.txt` provided in the example folder.
+
+### 3. Build the workspace
+
+cd ~/ros2_ws  
+colcon build  
+source install/setup.bash  
+
+### 4. Launch the AR4 driver
+
+ros2 launch annin_ar4_driver driver.launch.py \
+  ar_model:=mk5 calibrate:=True include_gripper:=True
+
+### 5. Launch MoveIt
+
+ros2 launch annin_ar4_moveit_config moveit.launch.py
+
+### 6. Run the demo node
+
+ros2 run ar4_moveit_cpp_demo simple_pick_place_mgi
+
+### Notes
+
+- MoveIt **must already be running** before launching the demo node.
+- The demo uses **joint-space targets for the arm** and **named states for the gripper** (`open` / `closed`) as defined in the SRDF.
+- This example is intentionally minimal and intended as a starting point for custom ROS 2 nodes that command the AR4 through MoveIt.
+
+
+
+
+
+
+
