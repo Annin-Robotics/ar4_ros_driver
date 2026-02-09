@@ -1,8 +1,8 @@
 # Calibration sequence configuration
 # - IMPORTANT: must be exactly 7 characters long: one for the type and six for joint order.
 # - calib_sequence[0] (0-3): Defines the calibration type
-#   - 0 : Calibrate all joints at the same time (standard behaviour)
-#   - 1 : Calibrate joints in the provided order, in two steps of 3
+#   - 0 : Calibrate all joints at the same time 
+#   - 1 : Calibrate joints in the provided order, in two steps of 3 (standard behaviour)
 #   - 2 : Calibrate joints in the provided order, in three steps of 2
 #   - 3 : Calibrate each joint separately in the provided order
 # - calib_sequence[1:6]: Defines the order of joints (values 0-5 correspond to joint_1 - joint_6)
