@@ -627,21 +627,15 @@ ros2 pkg create ar4_moveit_cpp_demo --build-type ament_cmake \
 
 Copy the example source file:
 
-```
-simple_pick_place_mgi.cpp
-```
+    simple_pick_place_mgi.cpp
 
 into:
 
-```
-ar4_moveit_cpp_demo/src/
-```
+    ar4_moveit_cpp_demo/src/
 
 Replace the generated `CMakeLists.txt` in:
 
-```
-ar4_moveit_cpp_demo/
-```
+    ar4_moveit_cpp_demo/
 
 with the `CMakeLists.txt` provided in the example folder.
 
