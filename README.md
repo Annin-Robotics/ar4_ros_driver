@@ -600,62 +600,90 @@ See the [Gripper Overcurrent Protection](./docs/gripper_overcurrent_protection.m
 
 ## Simple Node Example (C++ / MoveIt)
 
-This example demonstrates a minimal C++ ROS 2 node using **MoveIt’s MoveGroupInterface** to:
-- open the gripper
-- move the arm to a safe joint pose
-- move to a pick pose
-- close the gripper
-- return to the safe pose
-- return to a place pose
-- open the gripper
+This example demonstrates a minimal C++ ROS 2 node using **MoveIt’s MoveGroupInterface** to perform a simple pick-style motion sequence:
+
+- open the gripper  
+- move the arm to a safe joint pose  
+- move to a pick pose  
+- close the gripper  
+- return to the safe pose  
+
+This example is intended as a starting point for writing custom ROS 2 nodes that command the AR4 through MoveIt.
+
+---
 
 ### 1. Create the demo package
 
+```bash
 cd ~/ros2_ws/src
 
 ros2 pkg create ar4_moveit_cpp_demo --build-type ament_cmake \
   --dependencies rclcpp moveit_ros_planning_interface
+```
+
+---
 
 ### 2. Add the example source files
 
-Copy `simple_pick_place_mgi.cpp` from the example folder into:
+Copy the example source file:
 
+```
+simple_pick_place_mgi.cpp
+```
+
+into:
+
+```
 ar4_moveit_cpp_demo/src/
+```
 
 Replace the generated `CMakeLists.txt` in:
 
+```
 ar4_moveit_cpp_demo/
+```
 
 with the `CMakeLists.txt` provided in the example folder.
 
+---
+
 ### 3. Build the workspace
 
-cd ~/ros2_ws  
-colcon build  
-source install/setup.bash  
+```bash
+cd ~/ros2_ws
+colcon build
+source install/setup.bash
+```
+
+---
 
 ### 4. Launch the AR4 driver
 
+```bash
 ros2 launch annin_ar4_driver driver.launch.py \
   ar_model:=mk5 calibrate:=True include_gripper:=True
+```
+
+---
 
 ### 5. Launch MoveIt
 
+```bash
 ros2 launch annin_ar4_moveit_config moveit.launch.py
+```
+
+---
 
 ### 6. Run the demo node
 
+```bash
 ros2 run ar4_moveit_cpp_demo simple_pick_place_mgi
+```
+
+---
 
 ### Notes
 
 - MoveIt **must already be running** before launching the demo node.
 - The demo uses **joint-space targets for the arm** and **named states for the gripper** (`open` / `closed`) as defined in the SRDF.
-- This example is intentionally minimal and intended as a starting point for custom ROS 2 nodes that command the AR4 through MoveIt.
-
-
-
-
-
-
-
+- The code is intentionally minimal and designed to be easily extended for more advanced behaviors such as pose targets, collision objects, or service-based command interfaces.
