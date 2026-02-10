@@ -18,11 +18,12 @@ Tested with ROS 2 Jazzy on Ubuntu 24.04. Also has branch for Humble
 
 <div align="center">
 
-|                                        Moveit Motion Planning                                         |                                   Startup, Calibration, and Gripper Control                                   |
-| :---------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------: |
-| [![AR4 ROS 2 Driver Demo](http://img.youtube.com/vi/XJCrfrW7jXE/0.jpg)](https://youtu.be/XJCrfrW7jXE) | [![Startup, Calibration, Gripper](http://img.youtube.com/vi/PQtXFzqRtHM/0.jpg)](https://youtu.be/PQtXFzqRtHM) |
+|                                                AR4 ROS2 Tutorial                                                  |
+| :---------------------------------------------------------------------------------------------------------------: |
+| [![AR4 ROS2 Tutorial](http://img.youtube.com/vi/9jmXEHAL-Vk/0.jpg)](https://youtu.be/9jmXEHAL-Vk)                 |
 
 </div>
+
 
 ## Add-on Features and Capabilities
 
@@ -627,15 +628,15 @@ ros2 pkg create ar4_moveit_cpp_demo --build-type ament_cmake \
 
 Copy the example source file:
 
-    simple_pick_place_mgi.cpp
+  - simple_pick_place_mgi.cpp
 
 into:
 
-    ar4_moveit_cpp_demo/src/
+  - ar4_moveit_cpp_demo/src/
 
 Replace the generated `CMakeLists.txt` in:
 
-    ar4_moveit_cpp_demo/
+  - ar4_moveit_cpp_demo/
 
 with the `CMakeLists.txt` provided in the example folder.
 
@@ -655,7 +656,7 @@ source install/setup.bash
 
 ```bash
 ros2 launch annin_ar4_driver driver.launch.py \
-  ar_model:=mk5 calibrate:=True include_gripper:=True
+  ar_model:=mk4 calibrate:=True include_gripper:=True
 ```
 
 ---
