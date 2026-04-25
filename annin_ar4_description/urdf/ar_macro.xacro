@@ -34,7 +34,7 @@
   <visual>
     <origin xyz="0 0 0" rpy="0 0 -1.5708"/>
     <geometry>
-      <mesh filename="package://annin_ar4_description/meshes/${robot_parameters['mesh_dir']}/Link_Base_Aluminum.STL"/>
+      <mesh filename="file://$(find annin_ar4_description)/meshes/${robot_parameters['mesh_dir']}/Link_Base_Aluminum.STL"/>
     </geometry>
     <material name="base_aluminum_mat">
       <color rgba="0.863 0.863 0.863 1.0"/>
@@ -54,7 +54,7 @@
   <visual>
     <origin xyz="0 0 0" rpy="0 0 -1.5708"/>
     <geometry>
-      <mesh filename="package://annin_ar4_description/meshes/${robot_parameters['mesh_dir']}/Link_Base_Enclosure.STL"/>
+      <mesh filename="file://$(find annin_ar4_description)/meshes/${robot_parameters['mesh_dir']}/Link_Base_Enclosure.STL"/>
     </geometry>
     <material name="base_enclosure_mat">
       <color rgba="0.627 0.627 0.627 1.0"/>
@@ -72,7 +72,7 @@
   <visual>
     <origin xyz="0 0 0" rpy="0 0 -1.5708"/>
     <geometry>
-      <mesh filename="package://annin_ar4_description/meshes/${robot_parameters['mesh_dir']}/Link_Base_Motor.STL"/>
+      <mesh filename="file://$(find annin_ar4_description)/meshes/${robot_parameters['mesh_dir']}/Link_Base_Motor.STL"/>
     </geometry>
     <material name="base_motor_mat">
       <color rgba="0.078 0.078 0.078 1.0"/>
@@ -110,7 +110,7 @@
   <visual>
     <origin xyz="0 0 0" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://annin_ar4_description/meshes/${robot_parameters['mesh_dir']}/Link_1_Aluminum.STL"/>
+      <mesh filename="file://$(find annin_ar4_description)/meshes/${robot_parameters['mesh_dir']}/Link_1_Aluminum.STL"/>
     </geometry>
     <material name="link1_aluminum_mat">
       <color rgba="0.863 0.863 0.863 1.0"/>
@@ -120,7 +120,7 @@
   <collision>
     <origin xyz="0 0 0" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://annin_ar4_description/meshes/${robot_parameters['mesh_dir']}/Link_1_Col.STL"/>
+      <mesh filename="file://$(find annin_ar4_description)/meshes/${robot_parameters['mesh_dir']}/Link_1_Col.STL"/>
     </geometry>
   </collision>
 
@@ -136,7 +136,7 @@
   <visual>
     <origin xyz="0 0 0" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://annin_ar4_description/meshes/${robot_parameters['mesh_dir']}/Link_1_Motor.STL"/>
+      <mesh filename="file://$(find annin_ar4_description)/meshes/${robot_parameters['mesh_dir']}/Link_1_Motor.STL"/>
     </geometry>
     <material name="link1_motors_mat">
       <color rgba="0.078 0.078 0.078 1.0"/>
@@ -187,7 +187,7 @@
     <!-- offset fields (zero for now) -->
     <origin xyz="0 0 -0.00887" rpy="3.14 0 0"/>
     <geometry>
-      <mesh filename="package://annin_ar4_description/meshes/${robot_parameters['mesh_dir']}/Link_2_Aluminum.STL"/>
+      <mesh filename="file://$(find annin_ar4_description)/meshes/${robot_parameters['mesh_dir']}/Link_2_Aluminum.STL"/>
     </geometry>
     <material name="link2_aluminum_mat">
       <color rgba="0.863 0.863 0.863 1.0"/>
@@ -197,7 +197,7 @@
   <collision>
     <origin xyz="0 0 -0.00887" rpy="3.14 0 0"/>
     <geometry>
-      <mesh filename="package://annin_ar4_description/meshes/${robot_parameters['mesh_dir']}/Link_2_Col.STL"/>
+      <mesh filename="file://$(find annin_ar4_description)/meshes/${robot_parameters['mesh_dir']}/Link_2_Col.STL"/>
     </geometry>
   </collision>
 
@@ -214,7 +214,7 @@
     <!-- offset fields (zero for now) -->
     <origin xyz="0 0 -0.00887" rpy="3.14 0 0"/>
     <geometry>
-      <mesh filename="package://annin_ar4_description/meshes/${robot_parameters['mesh_dir']}/Link_2_Motor.STL"/>
+      <mesh filename="file://$(find annin_ar4_description)/meshes/${robot_parameters['mesh_dir']}/Link_2_Motor.STL"/>
     </geometry>
     <material name="link2_motor_mat">
       <color rgba="0.078 0.078 0.078 1.0"/>
@@ -233,7 +233,7 @@
     <!-- offset fields (zero for now) -->
     <origin xyz="0 0 -0.00887" rpy="3.14 0 0"/>
     <geometry>
-      <mesh filename="package://annin_ar4_description/meshes/${robot_parameters['mesh_dir']}/Link_2_Cover.STL"/>
+      <mesh filename="file://$(find annin_ar4_description)/meshes/${robot_parameters['mesh_dir']}/Link_2_Cover.STL"/>
     </geometry>
     <material name="link2_cover_mat">
       <color rgba="0 0.35 1 1"/>
@@ -252,7 +252,7 @@
     <!-- offset fields (zero for now) -->
     <origin xyz="0 0 -0.00887" rpy="3.14 0 0"/>
     <geometry>
-      <mesh filename="package://annin_ar4_description/meshes/${robot_parameters['mesh_dir']}/Link_2_Logo.STL"/>
+      <mesh filename="file://$(find annin_ar4_description)/meshes/${robot_parameters['mesh_dir']}/Link_2_Logo.STL"/>
     </geometry>
     <material name="link2_logo_mat">
       <color rgba="1 1 1 1"/>
@@ -299,7 +299,7 @@
   <visual>
     <origin xyz="0 0 -0.03671" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://annin_ar4_description/meshes/${robot_parameters['mesh_dir']}/Link_3_Aluminum.STL"/>
+      <mesh filename="file://$(find annin_ar4_description)/meshes/${robot_parameters['mesh_dir']}/Link_3_Aluminum.STL"/>
     </geometry>
     <material name="link3_aluminum_mat">
       <color rgba="0.863 0.863 0.863 1.0"/>
@@ -309,7 +309,7 @@
   <collision>
     <origin xyz="0 0 -0.03671" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://annin_ar4_description/meshes/${robot_parameters['mesh_dir']}/Link_3_Col.STL"/>
+      <mesh filename="file://$(find annin_ar4_description)/meshes/${robot_parameters['mesh_dir']}/Link_3_Col.STL"/>
     </geometry>
   </collision>
 
@@ -325,7 +325,7 @@
   <visual>
     <origin xyz="0 0 -0.03671" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://annin_ar4_description/meshes/${robot_parameters['mesh_dir']}/Link_3_Motor.STL"/>
+      <mesh filename="file://$(find annin_ar4_description)/meshes/${robot_parameters['mesh_dir']}/Link_3_Motor.STL"/>
     </geometry>
     <material name="link3_motor_mat">
       <color rgba="0.078 0.078 0.078 1.0"/>
@@ -372,7 +372,7 @@
   <visual>
     <origin xyz="0 0 -0.07594" rpy="0 0 -1.5708"/>
     <geometry>
-      <mesh filename="package://annin_ar4_description/meshes/${robot_parameters['mesh_dir']}/Link_4_Aluminum.STL"/>
+      <mesh filename="file://$(find annin_ar4_description)/meshes/${robot_parameters['mesh_dir']}/Link_4_Aluminum.STL"/>
     </geometry>
     <material name="link4_aluminum_mat">
       <color rgba="0.863 0.863 0.863 1.0"/>
@@ -382,7 +382,7 @@
   <collision>
     <origin xyz="0 0 -0.07594" rpy="0 0 -1.5708"/>
     <geometry>
-      <mesh filename="package://annin_ar4_description/meshes/${robot_parameters['mesh_dir']}/Link_4_Col.STL"/>
+      <mesh filename="file://$(find annin_ar4_description)/meshes/${robot_parameters['mesh_dir']}/Link_4_Col.STL"/>
     </geometry>
   </collision>
 
@@ -398,7 +398,7 @@
   <visual>
     <origin xyz="0 0 -0.07594" rpy="0 0 -1.5708"/>
     <geometry>
-      <mesh filename="package://annin_ar4_description/meshes/${robot_parameters['mesh_dir']}/Link_4_Motor.STL"/>
+      <mesh filename="file://$(find annin_ar4_description)/meshes/${robot_parameters['mesh_dir']}/Link_4_Motor.STL"/>
     </geometry>
     <material name="link4_motor_mat">
       <color rgba="0.078 0.078 0.078 1.0"/>
@@ -416,7 +416,7 @@
   <visual>
     <origin xyz="0 0 -0.07594" rpy="0 0 -1.5708"/>
     <geometry>
-      <mesh filename="package://annin_ar4_description/meshes/${robot_parameters['mesh_dir']}/Link_4_Cover.STL"/>
+      <mesh filename="file://$(find annin_ar4_description)/meshes/${robot_parameters['mesh_dir']}/Link_4_Cover.STL"/>
     </geometry>
     <material name="link4_cover_mat">
       <color rgba="0 0.35 1 1"/>
@@ -434,7 +434,7 @@
   <visual>
     <origin xyz="0 0 -0.07594" rpy="0 0 -1.5708"/>
     <geometry>
-      <mesh filename="package://annin_ar4_description/meshes/${robot_parameters['mesh_dir']}/Link_4_Logo.STL"/>
+      <mesh filename="file://$(find annin_ar4_description)/meshes/${robot_parameters['mesh_dir']}/Link_4_Logo.STL"/>
     </geometry>
     <material name="link4_logo_mat">
       <color rgba="1 1 1 1"/>
@@ -482,7 +482,7 @@
   <visual>
     <origin xyz="0 0 -0.0275" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://annin_ar4_description/meshes/${robot_parameters['mesh_dir']}/Link_5_Aluminum.STL"/>
+      <mesh filename="file://$(find annin_ar4_description)/meshes/${robot_parameters['mesh_dir']}/Link_5_Aluminum.STL"/>
     </geometry>
     <material name="aluminum_mat">
      <color rgba="0.863 0.863 0.863 1.0"/>
@@ -493,7 +493,7 @@
   <collision>
     <origin xyz="0 0 -0.0275" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://annin_ar4_description/meshes/${robot_parameters['mesh_dir']}/Link_5_Col.STL"/>
+      <mesh filename="file://$(find annin_ar4_description)/meshes/${robot_parameters['mesh_dir']}/Link_5_Col.STL"/>
     </geometry>
   </collision>
 </link>
@@ -509,7 +509,7 @@
   <visual>
     <origin xyz="0 0 -0.0275" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://annin_ar4_description/meshes/${robot_parameters['mesh_dir']}/Link_5_Motor.STL"/>
+      <mesh filename="file://$(find annin_ar4_description)/meshes/${robot_parameters['mesh_dir']}/Link_5_Motor.STL"/>
     </geometry>
    <material name="motor_mat">
     <color rgba="0.078 0.078 0.078 1.0"/>
@@ -553,7 +553,7 @@
     <!-- match your existing working offsets here if needed -->
     <origin xyz="0 0 -0.016" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://annin_ar4_description/meshes/${robot_parameters['mesh_dir']}/Link_6_Aluminum.STL"/>
+      <mesh filename="file://$(find annin_ar4_description)/meshes/${robot_parameters['mesh_dir']}/Link_6_Aluminum.STL"/>
     </geometry>
     <material name="aluminum_mat"/>
   </visual>
@@ -562,7 +562,7 @@
   <collision>
     <origin xyz="0 0 -0.016" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://annin_ar4_description/meshes/${robot_parameters['mesh_dir']}/Link_6_Col.STL"/>
+      <mesh filename="file://$(find annin_ar4_description)/meshes/${robot_parameters['mesh_dir']}/Link_6_Col.STL"/>
     </geometry>
   </collision>
 </link>
