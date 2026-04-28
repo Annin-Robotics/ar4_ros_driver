@@ -10,7 +10,7 @@ RUN apt-get update && \
     ros-jazzy-moveit-py \
     ros-jazzy-ros-gz
 
-COPY src /src
+COPY . /src
 RUN rosdep install --from-paths /src --ignore-src -r -y && \
     rm -rf /src
 
