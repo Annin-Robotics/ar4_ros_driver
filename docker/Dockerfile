@@ -15,4 +15,3 @@ RUN rosdep install --from-paths /src --ignore-src -r -y && \
     rm -rf /src
 
 RUN echo "source /opt/ros/jazzy/setup.bash" >> /etc/bash.bashrc
-    # echo "source /workspace/install/setup.bash" >> /etc/bash.bashrc
