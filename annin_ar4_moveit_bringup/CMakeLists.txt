@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(annin_ar4_moveit_config)
+project(annin_ar4_moveit_bringup)
 
 unset( CATKIN_INSTALL_INTO_PREFIX_ROOT )
 

@@ -114,7 +114,7 @@ def generate_launch_description():
     )
 
     # Gazebo nodes
-    world = os.path.join(get_package_share_directory('annin_ar4_gazebo'),
+    world = os.path.join(get_package_share_directory('annin_ar4_gz_bringup'),
                          'worlds', 'empty.world')
 
     # Bridge

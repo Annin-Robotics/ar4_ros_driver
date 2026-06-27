@@ -1,5 +1,5 @@
 <package format="3">
-  <name>annin_ar4_moveit_config</name>
+  <name>annin_ar4_moveit_bringup</name>
   <version>3.0.0</version>
   <description>
     Configuration and launch files for using the AR4 robot with MoveIt 2
