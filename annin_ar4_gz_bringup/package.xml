@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package format="3">
-  <name>annin_ar4_gazebo</name>
+  <name>annin_ar4_gz_bringup</name>
   <version>3.0.0</version>
   <description>Gazebo simulation the AR4 robot</description>
   <author>Yifei Cheng</author>

@@ -55,7 +55,7 @@ def generate_launch_description():
             choices=["True", "False"],
         ))
     rviz_config_file_default = PathJoinSubstitution(
-        [FindPackageShare("annin_ar4_moveit_config"), "rviz", "moveit.rviz"])
+        [FindPackageShare("annin_ar4_moveit_bringup"), "rviz", "moveit.rviz"])
     declared_arguments.append(
         DeclareLaunchArgument(
             "rviz_config_file",
@@ -100,7 +100,7 @@ def generate_launch_description():
         PathJoinSubstitution([FindExecutable(name="xacro")]),
         " ",
         PathJoinSubstitution([
-            FindPackageShare("annin_ar4_moveit_config"), "srdf",
+            FindPackageShare("annin_ar4_moveit_bringup"), "srdf",
             "ar.srdf.xacro"
         ]),
         " ",
@@ -120,23 +120,23 @@ def generate_launch_description():
     robot_description_kinematics = {
         "robot_description_kinematics":
         load_yaml(
-            "annin_ar4_moveit_config",
+            "annin_ar4_moveit_bringup",
             os.path.join("config", "kinematics.yaml"),
         )
     }
 
     joint_limits = ParameterFile(
         PathJoinSubstitution([
-            FindPackageShare("annin_ar4_moveit_config"),
+            FindPackageShare("annin_ar4_moveit_bringup"),
             "config/joint_limits.yaml"
         ]),
         allow_substs=True,
     )
 
     # Planning Configuration
-    ompl_planning_yaml = load_yaml("annin_ar4_moveit_config",
+    ompl_planning_yaml = load_yaml("annin_ar4_moveit_bringup",
                                    "config/ompl_planning.yaml")
-    pilz_planning_yaml = load_yaml("annin_ar4_moveit_config",
+    pilz_planning_yaml = load_yaml("annin_ar4_moveit_bringup",
                                    "config/pilz_planning.yaml")
     planning_pipeline_config = {
         "default_planning_pipeline": "ompl",
@@ -153,7 +153,7 @@ def generate_launch_description():
 
     moveit_controllers = ParameterFile(
         PathJoinSubstitution([
-            FindPackageShare("annin_ar4_moveit_config"),
+            FindPackageShare("annin_ar4_moveit_bringup"),
             "config/controllers.yaml"
         ]),
         allow_substs=True,
@@ -216,7 +216,7 @@ def generate_launch_description():
     # Servo Configuration
     servo_params = {
         "moveit_servo":
-        ParameterBuilder("annin_ar4_moveit_config").yaml(
+        ParameterBuilder("annin_ar4_moveit_bringup").yaml(
             "config/moveit_servo.yaml").to_dict()
     }
 

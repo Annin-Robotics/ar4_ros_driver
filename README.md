@@ -44,10 +44,10 @@ The following projects showcases additional features and capabilities built on t
   - Handles communication with the microcontrollers.
 - **annin_ar4_firmware**
   - Firmware for the Teensy and Arduino Nano microcontrollers.
-- **annin_ar4_moveit_config**
+- **annin_ar4_moveit_bringup**
   - MoveIt module for motion planning.
   - Controlling the arm and servo gripper through Rviz.
-- **annin_ar4_gazebo**
+- **annin_ar4_gz_bringup**
   - Simulation on Gazebo.
 
 ## Installation (ROS 2 Jazzy – Ubuntu 24.04)
@@ -200,7 +200,7 @@ source ~/.bashrc
 Before connecting real hardware, verify that ROS + MoveIt are working:
 
 ```bash
-ros2 launch annin_ar4_moveit_config demo.launch.py ar_model:=mk4
+ros2 launch annin_ar4_moveit_bringup demo.launch.py ar_model:=mk4
 ```
 
 This should open RViz with the AR4 model and interactive planning tools.
@@ -416,10 +416,10 @@ There are two modules that you will always need to run:
 1. **Arm module** - this can be for either a real-world or simulated arm
 
    - For controlling the real-world arm, you will need to run the `annin_ar4_driver` module
-   - For the simulated arm, you will need to run the `annin_ar4_gazebo` module
+   - For the simulated arm, you will need to run the `annin_ar4_gz_bringup` module
    - Either of the modules will load the necessary hardware descriptions for MoveIt
 
-2. **MoveIt module** - the `annin_ar4_moveit_config` module provides the MoveIt interface and RViz GUI.
+2. **MoveIt module** - the `annin_ar4_moveit_bringup` module provides the MoveIt interface and RViz GUI.
 
 The various use cases of the modules and instructions to run them are described below:
 
@@ -432,7 +432,7 @@ If you are unfamiliar with MoveIt, it is recommended to start with this to explo
 The robot description, moveit interface and RViz will all be loaded in the single demo launch file
 
 ```bash
-ros2 launch annin_ar4_moveit_config demo.launch.py ar_model:=mk4
+ros2 launch annin_ar4_moveit_bringup demo.launch.py ar_model:=mk4
 ```
 
 ---
@@ -461,7 +461,7 @@ runs with `calibrate:=False`.
 Start MoveIt and RViz:
 
 ```bash
-ros2 launch annin_ar4_moveit_config moveit.launch.py
+ros2 launch annin_ar4_moveit_bringup moveit.launch.py
 ```
 
 You can now plan in RViz and control the real-world arm. Joint commands and joint states will be updated through the hardware interface.
@@ -480,16 +480,16 @@ where `<AR_MODEL>` is the model of the AR4, one of `mk1`, `mk2`, or `mk3`
 
 ### Control simulated arm in Gazebo with MoveIt in RViz
 
-Start the `annin_ar4_gazebo` module, which will start the Gazebo simulator and load the robot description.
+Start the `annin_ar4_gz_bringup` module, which will start the Gazebo simulator and load the robot description.
 
 ```bash
-ros2 launch annin_ar4_gazebo gazebo.launch.py
+ros2 launch annin_ar4_gz_bringup gazebo.launch.py
 ```
 
 Start Moveit and RViz:
 
 ```bash
-ros2 launch annin_ar4_moveit_config moveit.launch.py use_sim_time:=true include_gripper:=True
+ros2 launch annin_ar4_moveit_bringup moveit.launch.py use_sim_time:=true include_gripper:=True
 ```
 
 You can now plan in RViz and control the simulated arm.
@@ -664,7 +664,7 @@ ros2 launch annin_ar4_driver driver.launch.py \
 ### 5. Launch MoveIt
 
 ```bash
-ros2 launch annin_ar4_moveit_config moveit.launch.py
+ros2 launch annin_ar4_moveit_bringup moveit.launch.py
 ```
 
 ---

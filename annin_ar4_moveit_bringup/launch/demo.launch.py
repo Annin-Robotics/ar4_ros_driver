@@ -42,7 +42,7 @@ def generate_launch_description():
         PathJoinSubstitution([FindExecutable(name="xacro")]),
         " ",
         PathJoinSubstitution([
-            FindPackageShare("annin_ar4_moveit_config"),
+            FindPackageShare("annin_ar4_moveit_bringup"),
             "urdf",
             "fake_ar.urdf.xacro",
         ]),
@@ -60,7 +60,7 @@ def generate_launch_description():
         PathJoinSubstitution([FindExecutable(name="xacro")]),
         " ",
         PathJoinSubstitution([
-            FindPackageShare("annin_ar4_moveit_config"), "srdf",
+            FindPackageShare("annin_ar4_moveit_bringup"), "srdf",
             "ar.srdf.xacro"
         ]),
         " ",
@@ -77,23 +77,23 @@ def generate_launch_description():
     robot_description_kinematics = {
         "robot_description_kinematics":
         load_yaml(
-            "annin_ar4_moveit_config",
+            "annin_ar4_moveit_bringup",
             os.path.join("config", "kinematics.yaml"),
         )
     }
 
     joint_limits = ParameterFile(
         PathJoinSubstitution([
-            FindPackageShare("annin_ar4_moveit_config"),
+            FindPackageShare("annin_ar4_moveit_bringup"),
             "config/joint_limits.yaml"
         ]),
         allow_substs=True,
     )
 
     # Planning Configuration
-    ompl_planning_yaml = load_yaml("annin_ar4_moveit_config",
+    ompl_planning_yaml = load_yaml("annin_ar4_moveit_bringup",
                                    "config/ompl_planning.yaml")
-    pilz_planning_yaml = load_yaml("annin_ar4_moveit_config",
+    pilz_planning_yaml = load_yaml("annin_ar4_moveit_bringup",
                                    "config/pilz_planning.yaml")
     planning_pipeline_config = {
         "default_planning_pipeline": "ompl",
@@ -109,7 +109,7 @@ def generate_launch_description():
 
     moveit_controllers = ParameterFile(
         PathJoinSubstitution([
-            FindPackageShare("annin_ar4_moveit_config"),
+            FindPackageShare("annin_ar4_moveit_bringup"),
             "config/controllers.yaml"
         ]),
         allow_substs=True,
@@ -149,7 +149,7 @@ def generate_launch_description():
 
     # RViz
     rviz_base = os.path.join(
-        get_package_share_directory("annin_ar4_moveit_config"), "rviz")
+        get_package_share_directory("annin_ar4_moveit_bringup"), "rviz")
     rviz_full_config = os.path.join(rviz_base, "moveit.rviz")
 
     rviz_node = Node(
